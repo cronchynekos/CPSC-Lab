@@ -1,0 +1,3 @@
+﻿  proj 1 1.0.cpp
+C:\Users\Nathans PC\source\repos\proj 1 1.0\proj 1 1.0\UserLogin.hpp(74): warning C4715: 'UserLogin::wordBucketIdMethod2': not all control paths return a value
+  proj 1 1.0.vcxproj -> C:\Users\Nathans PC\source\repos\proj 1 1.0\Debug\proj 1 1.0.exe

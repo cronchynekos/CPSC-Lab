@@ -1,0 +1,3 @@
+﻿  lab22.c
+C:\Users\Nathans PC\source\repos\lab22\lab22\lab22.c(27,6): warning C4101: 'inputName': unreferenced local variable
+  lab22.vcxproj -> C:\Users\Nathans PC\source\repos\lab22\Debug\lab22.exe

@@ -1,0 +1,3 @@
+﻿  week 12 lab 10.cpp
+C:\Users\Nathans PC\source\repos\week 12 lab 10\week 12 lab 10\week 12 lab 10.cpp(79,15): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+LINK : fatal error LNK1168: cannot open C:\Users\Nathans PC\source\repos\week 12 lab 10\Debug\week 12 lab 10.exe for writing

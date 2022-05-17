@@ -1,0 +1,499 @@
+second_degree.c
+
+//****************************************************************************************************************************
+//Program name: "Perimeter of a rectangle".  This program demonstrates the input of multiple float numbers from the standard input device *
+//using a single instruction and the output of multiple float numbers to the standard output device also using a single      *
+//instruction.  Copyright (C) 2019 Nathanael Kim.                                                                           *
+//                                                                                                                           *
+//This file is part of the software program "Electric Resistance Calculator".                                                                   *
+//Electric Resistance Calculator is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License   *
+//version 3 as published by the Free Software Foundation.                                                                    *
+//Electric Resistance Calculator is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied          *
+//warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.     *
+//A copy of the GNU General Public License v3 is available here:  <https:;www.gnu.org/licenses/>.                            *
+//****************************************************************************************************************************
+
+
+//=======1=========2=========3=========4=========5=========6=========7=========8=========9=========0=========1=========2=========3**
+//
+//Author information
+//  Author name: Nathanael Kim
+//  Author email: nathan.kim@csu.fullerton.edu
+//
+//Program information
+//  Program name: Electric Resistance Calculator
+//  Programming languages: One modules in C and one module in X86
+//  Date program began: 2021-Feb-10
+//  Date of last update: 2021-Feb-13
+//  Date of reorganization of comments: 2021-Feb-13
+//  Files in this program: electricity.cpp, resistance.asm
+//  Status: Finished.  The program was tested extensively with no errors in Xubuntu19.04.
+//
+//Purpose
+//  Show how to input and output floating point (64-bit) numbers.
+//
+//This file
+//   File name: resistance.asm
+//   Language: C++
+//   Max page width: 132 columns
+//   Compile: gcc -c -Wall -m64 -no-pie -o electricity.o electricity.cpp -std=c++17
+//   Link: gcc -m64 -no-pie -o finalresistance.out -std=c++17 resistance.o electricity.o
+//   Optimal print specification: 132 columns width, 7 points, monospace, 8½x11 paper
+//
+//=======1=========2=========3=========4=========5=========6=========7=========8=========9=========0=========1=========2=========3**
+//
+//
+//===== Begin code area ===========================================================================================================
+
+#include <stdio.h>
+#include <stdint.h>
+#include <time.h>
+#include <sys/time.h>
+#include <stdlib.h>
+#include <stdbool.h>
+
+extern float _quadratic();
+extern bool isfloat();
+
+int main(int argc, char* argv[])
+{
+  float answer = 0.0;
+  printf("~Welcome to Root Calculator\n");
+  printf("~Programmed by Nathanael Kim, Student Programmer\n");
+  //printf("================================================================\n");
+  answer = _quadratic();
+  printf("The main driver has recieved the value %2.5lf and decided to keep it.\n", answer);
+  return 0;
+}
+
+
+
+quatratic.asm
+
+;****************************************************************************************************************************
+;Program name: "Electric Resistance Calculator".  This program demonstrates the input of multiple float numbers from the standard input device *
+;using a single instruction and the output of multiple float numbers to the standard output device also using a single      *
+;instruction.  Copyright (C) 2019 Nathanael Kim                                                                          *
+;                                                                                                                           *
+;This file is part of the software program "Electric Resistance Calculator".                                                                   *
+;Perimeter of a rectangle is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License   *
+;version 3 as published by the Free Software Foundation.                                                                    *
+;Electric Resistance Calculator is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied          *
+;warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.     *
+;A copy of the GNU General Public License v3 is available here:  <https:;www.gnu.org/licenses/>.                            *
+;****************************************************************************************************************************
+
+;========1=========2=========3=========4=========5=========6=========7=========8=========9=========0=========1=========2=========3**
+;
+;Author information
+;  Author name: Nathanael Kim
+;  Author email: nathan.kim@csu.fullerton.edu
+
+;Program information
+;  Program name: Electric Resistance Calculator
+;  Programming languages: One modules in C and one module in X86
+;  Date program began: 2021-Feb-10
+;  Date of last update: 2021-Feb-13
+;  Date of reorganization of comments: 2021-Feb-13
+;  Files in this program: electricity.cpp, resistance.asm
+;  Status: Finished.  The program was tested extensively with no errors in Xubuntu19.04.
+
+;This file
+;   File name: perimeter.asm
+;   Language: X86 with Intel syntax.
+;   Max page width: 132 columns
+;   Assemble: nasm -f elf64 -l resistance.lis -o resistance.o resistance.asm
+
+;===== Begin code area ================================================================================================
+
+extern printf
+extern scanf
+extern second_degree
+extern atof
+extern atolong
+extern isfloat
+extern show_no_root
+extern show_one_root
+extern show_two_root
+global _quadratic
+
+segment .data
+    welcome db "This program will find the roots of your quadratic equation",10,0
+    input1prompt db "Please enter the three coefficients of your equation: ",10,0
+    input_resistances db "%s%s%s",0
+    invalid_prompt db "This input is invalid",10,0
+    output1prompt db "These equation is: %2.5lfx^2 + %2.5lfx + %2.5lf = 0.0", 10,0
+    output2prompt db "The discriminate is %2.5lf",10,0
+    goodbye db "One root will be returned to the caller module.", 10,0
+
+  segment .bss
+
+  segment .text
+
+  _quadratic:
+
+  push rbp
+  mov  rbp,rsp
+  push rdi                                                    ;Backup rdi
+  push rsi                                                    ;Backup rsi
+  push rdx                                                    ;Backup rdx
+  push rcx                                                    ;Backup rcx
+  push r8                                                     ;Backup r8
+  push r9                                                     ;Backup r9
+  push r10                                                    ;Backup r10
+  push r11                                                    ;Backup r11
+  push r12                                                    ;Backup r12
+  push r13                                                    ;Backup r13
+  push r14                                                    ;Backup r14
+  push r15                                                    ;Backup r15
+  push rbx                                                    ;Backup rbx
+  pushf                                                       ;Backup rflags
+
+
+  push qword 0
+
+  ;Display welcome message
+  mov rax, 0
+  mov rdi, welcome
+  call printf
+
+  ;================ Begin section for inputting resistances =====================
+  sub rsp, 1024
+
+  push qword 99
+  mov rax, 0
+  mov rdi, input1prompt ;
+  call printf
+  pop rax
+
+  ;create space for input
+  push qword -1
+  push qword -2
+  push qword -3
+
+  mov rax, 1
+  mov rdi, input_resistances
+  mov rsi, rsp
+  mov rdx, rsp
+  add rdx, 8
+  mov rcx, rsp
+  add rcx, 16
+  movsd xmm13, [rsp]
+  movsd xmm14, [rsp+8]
+  movsd xmm15, [rsp+16]
+  call scanf
+
+  ;check the user input
+    mov rax, 0
+    mov rdi, rsp
+    call isfloat
+    cmp rax, 0
+    je invalid
+
+    ;float conversion
+    mov rax,0
+    mov rdi, rsp
+    call atof
+    movsd xmm13, xmm0
+
+    mov rax, 0
+    mov rdi, rsp
+    add rdi, 8
+    call isfloat
+    cmp rax, 0
+    je invalid
+
+    ;float conversion
+    mov rax,0
+    mov rdi, rsp
+    add rdi, 8
+    call atof
+    movsd xmm14, xmm0
+
+    mov rax, 0
+    mov rdi, rsp
+    add rdi, 16
+    call isfloat
+    cmp rax, 0
+    je invalid
+
+    ;float conversion
+    mov rax,0
+    mov rdi, rsp
+    add rdi, 16
+    call atof
+    movsd xmm15, xmm0
+
+    jmp valid
+
+
+;  pop rax
+;  pop rax
+;  pop rax
+
+;  mov rax,0
+;  mov rdi, rsp
+;  call atof
+;  movsd xmm13, xmm0
+
+invalid:
+  mov rax, 1
+  mov rdi, invalid_prompt
+  call printf
+  jmp end
+
+valid:
+  ;sub rsp, 1024
+  pop rax
+  jmp calculation
+  ;================ End section for inputting resistances ======================
+
+
+  ;================ Start section to calculate discriminate =====================
+
+calculation:
+  ;Display input message
+  push qword 99
+  mov rax,3
+  mov rdi, output1prompt
+  movsd xmm0, xmm13
+  movsd xmm1, xmm14
+  movsd xmm2, xmm15
+  call printf
+  pop rax
+
+
+  ;Calculate discriminate
+  push qword 0
+  mov r10, 4
+  cvtsi2sd xmm11, r10
+  movsd xmm10, xmm14 ;copy of B into xmm10
+  mulsd xmm10, xmm10 ;b^2
+  mulsd xmm11, xmm13
+  mulsd xmm11, xmm15 ;4ac
+  subsd xmm10, xmm11 ;b^2 - 4ac
+  movsd xmm12, xmm10
+  sqrtsd xmm12, xmm12
+  mov r11, 0
+  cvtsi2sd xmm9, r11
+  ucomisd xmm10, xmm9
+
+
+  mov rax, 1
+  mov rdi, output2prompt
+  movsd xmm0, xmm10
+  call printf
+
+
+  ja twoRoot
+  je oneRoot
+  jb noRoot
+
+
+  twoRoot:
+
+
+    mov r12, -1
+    cvtsi2sd xmm11, r12
+    mov r13, 2
+    cvtsi2sd xmm10, r13
+    mulsd xmm11, xmm14 ;-1 * b
+    mulsd xmm10, xmm13 ;2 * a
+    movsd xmm9, xmm12 ;create copy of the sqrt discriminate
+    addsd xmm9, xmm11 ;add -b and discriminate
+    subsd xmm11, xmm12 ;subtract -b and discriminate
+    divsd xmm9, xmm10
+    divsd xmm11, xmm10
+
+    movsd xmm0, xmm9
+    movsd xmm1, xmm11
+
+    mov rax, 1
+    call show_two_root
+    jmp programEnd
+
+
+  oneRoot:
+
+    push qword 0
+    mov r9, -1
+    cvtsi2sd xmm9, r9
+    mov r8, 2
+    cvtsi2sd xmm4, r8
+
+    mulsd xmm10, xmm13
+    mulsd xmm11, xmm14
+    divsd xmm9, xmm10
+    movsd xmm0, xmm9
+
+    mov rax,1
+    call show_one_root
+    jmp programEnd
+
+
+
+  noRoot:
+    mov rax, 0
+    call show_no_root
+
+;================ End section for calculating  ====================
+
+
+;================ Prepare to exit from this program =====================
+
+programEnd:
+
+  ;Display goodbye message
+  ;push qword 0
+  mov rax, 0
+  mov rdi, goodbye
+  call printf
+  pop rax
+
+  ;movsd xmm0, xmm9 ;select value to return
+
+;===== Restore original values to integer registers =============================
+end:
+  ;add rsp, 528
+  add rsp, 1024
+  popf                                                        ;Restore rflags
+  pop rbx                                                     ;Restore rbx
+  pop r15                                                     ;Restore r15
+  pop r14                                                     ;Restore r14
+  pop r13                                                     ;Restore r13
+  pop r12                                                     ;Restore r12
+  pop r11                                                     ;Restore r11
+  pop r10                                                     ;Restore r10
+  pop r9                                                      ;Restore r9
+  pop r8                                                      ;Restore r8
+  pop rcx                                                     ;Restore rcx
+  pop rdx                                                     ;Restore rdx
+  pop rsi                                                     ;Restore rsi
+  pop rdi                                                     ;Restore rdi
+  pop rbp                                                     ;Restore rbp
+
+  ret
+
+;========1=========2=========3=========4=========5=========6=========7=========8=========9=========0=========1=========2=========3**
+
+
+
+
+
+
+run.sh
+
+#!/bin/bash
+
+#Author Nathanael kim
+#Program: Quadratic Formula
+
+
+rm *.o
+rm *.out
+
+echo "~Assemble Quadratic.asm"
+nasm -f elf64 -l quadratic.lis -o quadratic.o quadratic.asm
+
+echo "~Compile second_degree.c"
+gcc -c -Wall -m64 -no-pie -o second_degree.o second_degree.c -std=c11
+
+echo "~Compile isfloat.cpp"
+g++ -c -Wall -m64 -fno-pie -no-pie -o isfloat.o isfloat.cpp -std=c++17
+
+echo "~Compile quad_library.cpp"
+g++ -c -Wall -m64 -fno-pie -no-pie -o quad_library.o quad_library.cpp -std=c++17
+
+echo "~Link the object files using the gcc linker standard 2017"
+g++ -m64 -no-pie -o quadraticfinal.out quadratic.o second_degree.o isfloat.o quad_library.o -std=c11
+
+echo "~Run the program Quadratic Formula"
+./quadraticfinal.out
+
+echo "~Have a very nice evening"
+
+
+
+
+
+isfloat.cpp
+
+#include <iostream>
+
+extern "C" bool isfloat(char [ ]);
+
+bool isfloat(char w[ ])
+{   bool result = true;
+    bool onepoint = false;
+    int start = 0;
+    if (w[0] == '-' || w[0] == '+') start = 1;
+    unsigned long int k = start;
+    while (!(w[k] == '\0') && result )
+    {    if (w[k] == '.' && !onepoint)
+               onepoint = true;
+         else
+               result = result && isdigit(w[k]) ;
+         k++;
+     }
+     return result && onepoint;
+}
+
+
+
+
+
+
+
+quad_library.cpp
+
+#include <iostream>
+
+extern "C" void show_no_root();
+extern "C" void show_one_root(double root);
+extern "C" void show_two_root(double root1, double root2);
+
+extern "C"{
+  void show_no_root(){
+    std::cout << "No root is detected. Returning to program." << std::endl;
+  }
+}
+
+extern "C"{
+  void show_one_root(double root){
+    std::cout << "One root is detected. The root is: " << root << std::endl;
+  }
+}
+
+extern "C"{
+  void show_two_root(double root1, double root2){
+    std::cout << "Two roots are detected. The two roots are: " << root1 << " and " << root2 << std::endl;
+  }
+}
+
+
+
+
+
+
+isdigit.cpp
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <ctype.h>
+
+using namespace std;
+
+extern "C" bool isdigit(char []);
+
+  bool isdigit(char w[])
+  {
+    if(isdigit(w[0]))
+      {
+        return 1;
+      }
+      else
+      {
+        return 0;
+      }
+  }
+

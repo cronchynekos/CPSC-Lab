@@ -1,0 +1,299 @@
+#!/bin/bash
+
+#Author Nathanael kim
+#Program: Perimeter of a rectangle
+
+#Delete some un-needed files
+
+rm *.o
+rm *.out
+
+echo "~Assemble perimeter.asm"
+nasm -f elf64 -l perimeter.lis -o perimeter.o perimeter.asm
+
+echo "~Compile rectangle.cpp"
+gcc -c -Wall -m64 -no-pie -o rectangle.o rectangle.cpp -std=c++17
+
+echo "~Link the object files using the gcc linker standard 2017"
+gcc -m64 -no-pie -o finalperimeter.out -std=c++17 perimeter.o rectangle.o
+
+echo "~Run the program Perimeter of Rectangle"
+./finalperimeter.out
+
+echo "~Have a nice day."
+
+
+
+
+
+
+
+//****************************************************************************************************************************
+//Program name: "Perimeter of a rectangle".  This program demonstrates the input of multiple float numbers from the standard input device *
+//using a single instruction and the output of multiple float numbers to the standard output device also using a single      *
+//instruction.  Copyright (C) 2019 Nathanael Kim.                                                                           *
+//                                                                                                                           *
+//This file is part of the software program "Perimeter of a rectangle".                                                                   *
+//Perimeter of a rectangle is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License   *
+//version 3 as published by the Free Software Foundation.                                                                    *
+//Perimeter of a rectangle is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied          *
+//warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.     *
+//A copy of the GNU General Public License v3 is available here:  <https:;www.gnu.org/licenses/>.                            *
+//****************************************************************************************************************************
+
+
+//=======1=========2=========3=========4=========5=========6=========7=========8=========9=========0=========1=========2=========3**
+//
+//Author information
+//  Author name: Nathanael Kim
+//  Author email: nathan.kim@csu.fullerton.edu
+//
+//Program information
+//  Program name: Perimeter of a rectangle
+//  Programming languages: One modules in C and one module in X86
+//  Date program began: 2021-Feb-10
+//  Date of last update: 2021-Feb-13
+//  Date of reorganization of comments: 2021-Feb-13
+//  Files in this program: rectangle.cpp, perimeter.asm
+//  Status: Finished.  The program was tested extensively with no errors in Xubuntu19.04.
+//
+//Purpose
+//  Show how to input and output floating point (64-bit) numbers.
+//
+//This file
+//   File name: perimeter.asm
+//   Language: C++
+//   Max page width: 132 columns
+//   Compile: gcc -c -Wall -m64 -no-pie -o rectangle.o rectangle.cpp -std=c++17
+//   Link: gcc -m64 -no-pie -o finalperimeter.out -std=c++17 perimeter.o rectangle.o
+//   Optimal print specification: 132 columns width, 7 points, monospace, 8½x11 paper
+//
+//=======1=========2=========3=========4=========5=========6=========7=========8=========9=========0=========1=========2=========3**
+//
+//
+//===== Begin code area ===========================================================================================================
+
+#include <stdio.h>
+#include <stdint.h>
+#include <time.h>
+#include <sys/time.h>
+#include <stdlib.h>
+
+extern "C" double _perimeter();
+
+int main()
+{
+  double answer = 0.0;
+  printf("~The main function rectangle.cpp has begun\n");
+  printf("~The function rectangle will now be called\n");
+  printf("================================================================\n");
+  answer = _perimeter();
+  printf("The function rectangle has returned this value %8.5lf\n", answer);
+  return 0;
+}
+
+
+
+
+
+
+
+
+;****************************************************************************************************************************
+;Program name: "Perimeter of a rectangle".  This program demonstrates the input of multiple float numbers from the standard input device *
+;using a single instruction and the output of multiple float numbers to the standard output device also using a single      *
+;instruction.  Copyright (C) 2019 Nathanael Kim                                                                          *
+;                                                                                                                           *
+;This file is part of the software program "Perimeter of a rectangle".                                                                   *
+;Perimeter of a rectangle is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License   *
+;version 3 as published by the Free Software Foundation.                                                                    *
+;Perimeter of a rectangle is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied          *
+;warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.     *
+;A copy of the GNU General Public License v3 is available here:  <https:;www.gnu.org/licenses/>.                            *
+;****************************************************************************************************************************
+
+;========1=========2=========3=========4=========5=========6=========7=========8=========9=========0=========1=========2=========3**
+;
+;Author information
+;  Author name: Nathanael Kim
+;  Author email: nathan.kim@csu.fullerton.edu
+
+;Program information
+;  Program name: Perimeter of a rectangle
+;  Programming languages: One modules in C and one module in X86
+;  Date program began: 2021-Feb-10
+;  Date of last update: 2021-Feb-13
+;  Date of reorganization of comments: 2021-Feb-13
+;  Files in this program: rectangle.cpp, perimeter.asm
+;  Status: Finished.  The program was tested extensively with no errors in Xubuntu19.04.
+
+;This file
+;   File name: perimeter.asm
+;   Language: X86 with Intel syntax.
+;   Max page width: 132 columns
+;   Assemble: nasm -f elf64 -l perimeter.lis -o perimeter.o perimeter.asm
+
+;===== Begin code area ================================================================================================
+
+extern printf
+extern scanf
+global _perimeter
+
+segment .data
+    welcome db "welcome to a friendly assembly program by Nathanael Kim",10,0
+    description db "This program will compute the perimeter and average side length of a rectangle",10,0
+    input1prompt db "Enter the height: ",10,0
+    input2prompt db "Enter the width: ",10,0
+    input_height_float_format db "%lf",0
+    input_width_float_format db "%lf",0
+    output1prompt db "the perimeter is %5.3lf", 10,0
+    output2prompt db "The average side length is %5.3lf",10,0
+    goodbye db "I hope you enjoyed your rectangle", 10,0
+
+  segment .bss
+
+  segment .text
+
+  _perimeter:
+
+  push rbp
+  mov  rbp,rsp
+  push rdi                                                    ;Backup rdi
+  push rsi                                                    ;Backup rsi
+  push rdx                                                    ;Backup rdx
+  push rcx                                                    ;Backup rcx
+  push r8                                                     ;Backup r8
+  push r9                                                     ;Backup r9
+  push r10                                                    ;Backup r10
+  push r11                                                    ;Backup r11
+  push r12                                                    ;Backup r12
+  push r13                                                    ;Backup r13
+  push r14                                                    ;Backup r14
+  push r15                                                    ;Backup r15
+  push rbx                                                    ;Backup rbx
+  pushf                                                       ;Backup rflags
+
+
+
+  push qword 0
+
+  ;Display welcome message
+  mov rax, 0
+  mov rdi, welcome ;displays the messsage "welcome to a friendly assembly program by Nathanael Kim"
+  call printf
+
+  ;Display description message
+  mov rax, 0
+  mov rdi, description ;display the message "This program will compute the perimeter and average side length of a rectangle"
+  call printf
+
+  ;================ Begin section for inputting height =====================
+  push qword 0
+
+  ;Display height prompt
+  mov rax, 0
+  mov rdi, input1prompt ;displays the message "Enter the height: "
+  call printf
+  pop rax
+
+  ;Begin scanf and call scanf
+  push qword 0
+  mov rax, 0
+  mov rdi, input_height_float_format
+  mov rsi, rsp
+  call scanf
+  movsd xmm10, [rsp]
+
+  pop rax
+
+  ;================ End section for inputting height ======================
+
+  ;================ Begin section for inputting width =====================
+
+  push qword 0
+
+  ;Display height prompt message
+  mov rax, 0
+  mov rdi, input2prompt ;displays the message "Enter the width: "
+  call printf
+  pop rax
+
+  ;Begin scanf and call scanf
+  push qword 0
+  mov rax, 0
+  mov rdi, input_width_float_format
+  mov rsi, rsp
+  call scanf
+  movsd xmm11, [rsp]
+
+  pop rax
+  ;================ End section for inputting width ====================
+
+  ;================ Start section to calculate perimeter =====================
+  ;Calculate perimeter
+  push qword 0
+  movsd xmm12, xmm11
+  addsd xmm12, xmm11
+  addsd xmm12, xmm10
+  addsd xmm12, xmm10
+
+  ;Display output perimeter message
+  mov rax,1
+  mov rdi, output1prompt ;displays the message "the perimeter is______"
+  movsd xmm0, xmm12
+  call printf
+
+  pop rax
+
+;================ End section for calculating perimeter ====================
+
+;================ Start section to calculate average side length =====================
+
+  ;Calculate side length
+  push qword 0
+  mov r10, 4
+  cvtsi2sd xmm15, r10 ;converts 32 bit
+  addsd xmm0, xmm12 ;adds
+  divsd xmm0, xmm15 ;divides
+
+  ;Display output side length message
+  mov rax, 1
+  mov rdi, output2prompt ;displays the message "The average side length is____"
+  movsd xmm13, xmm0
+  call printf
+
+  pop rax
+
+;================ End section for calculating average side length ====================
+
+;================ Prepare to exit from this program =====================
+
+  ;Display goodbye message
+  mov rax, 0
+  mov rdi, goodbye ;displays the message "I hope you enjoyed your rectangle"
+  call printf
+
+  pop rax
+  movsd xmm0, xmm12 ;select value to return
+
+;===== Restore original values to integer registers =============================
+
+  popf                                                        ;Restore rflags
+  pop rbx                                                     ;Restore rbx
+  pop r15                                                     ;Restore r15
+  pop r14                                                     ;Restore r14
+  pop r13                                                     ;Restore r13
+  pop r12                                                     ;Restore r12
+  pop r11                                                     ;Restore r11
+  pop r10                                                     ;Restore r10
+  pop r9                                                      ;Restore r9
+  pop r8                                                      ;Restore r8
+  pop rcx                                                     ;Restore rcx
+  pop rdx                                                     ;Restore rdx
+  pop rsi                                                     ;Restore rsi
+  pop rdi                                                     ;Restore rdi
+  pop rbp                                                     ;Restore rbp
+
+  ret
+
+;========1=========2=========3=========4=========5=========6=========7=========8=========9=========0=========1=========2=========3**

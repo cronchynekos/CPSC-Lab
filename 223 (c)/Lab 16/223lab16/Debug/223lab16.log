@@ -1,0 +1,4 @@
+﻿  223lab16.c
+C:\Users\Nathans PC\source\repos\223lab16\223lab16\223lab16.c(15,1): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+C:\Users\Nathans PC\source\repos\223lab16\223lab16\223lab16.c(25,40): warning C4101: 'result': unreferenced local variable
+  223lab16.vcxproj -> C:\Users\Nathans PC\source\repos\223lab16\Debug\223lab16.exe

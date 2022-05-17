@@ -1,0 +1,4 @@
+﻿  project2cpsc223.c
+C:\Users\Nathans PC\source\repos\Project2cpsc223\Project2cpsc223\project2cpsc223.c(20,30): warning C4477: 'fscanf' : format string '%s' requires an argument of type 'char *', but variadic argument 1 has type 'const char *'
+C:\Users\Nathans PC\source\repos\Project2cpsc223\Project2cpsc223\project2cpsc223.c(21,30): warning C4477: 'fscanf' : format string '%[^\n]' requires an argument of type 'char *', but variadic argument 1 has type 'const char *'
+  Project2cpsc223.vcxproj -> C:\Users\Nathans PC\source\repos\Project2cpsc223\Debug\Project2cpsc223.exe

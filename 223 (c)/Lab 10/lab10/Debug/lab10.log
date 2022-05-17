@@ -1,0 +1,4 @@
+﻿  lab10.c
+C:\Users\Nathans PC\source\repos\lab10\lab10\lab10.c(32,55): warning C4047: 'function': 'char *' differs in levels of indirection from 'const char **'
+C:\Users\Nathans PC\source\repos\lab10\lab10\lab10.c(32,55): warning C4024: 'strindex': different types for formal and actual parameter 1
+  lab10.vcxproj -> C:\Users\Nathans PC\source\repos\lab10\Debug\lab10.exe

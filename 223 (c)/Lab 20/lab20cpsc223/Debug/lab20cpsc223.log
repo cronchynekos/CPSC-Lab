@@ -1,0 +1,3 @@
+﻿  20.c
+C:\Users\Nathans PC\source\repos\lab20cpsc223\lab20cpsc223\20.c(8,2): warning C4091: 'typedef ': ignored on left of 'node' when no variable is declared
+  lab20cpsc223.vcxproj -> C:\Users\Nathans PC\source\repos\lab20cpsc223\Debug\lab20cpsc223.exe
